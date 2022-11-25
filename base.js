@@ -45,6 +45,7 @@ function keyPressed(event) {
 
 function addLetter(letter, row) {
     if (!currentRow) return
+    console.log("test")
 }
 
 function rowPressed(event) {
