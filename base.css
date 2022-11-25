@@ -81,6 +81,20 @@
   .row {
     display: inline-flex;
     gap: .25em;
+    border: 0.2em solid;
+    border-color: rgba(red, green, blue, 0);
+  }
+
+  .row:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .row-clicked {
+    border-color: rgba(255, 255, 255, 1);
+  }
+
+  .row-clicked:hover {
+    
   }
 
   .tile {
@@ -100,6 +114,9 @@
     align-items: center;
     user-select: none;
     transition: transform 250ms linear;
+
+    pointer-events: none;
+
   }
   
   .tile[data-state="active"] {
