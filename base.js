@@ -30,32 +30,95 @@ function createGrid(word, width, height) {
 }
 
 function keyPressed(event) {
-    if (!currentRow) return
+    if (!currentRow) { 
+        //Display Error
+        console.log("Select a Row!!!")
+        return
+    }
+
+    if ("entered" in currentRow.dataset) {
+        //Display Error
+        console.log("Already Entered Word")
+        return
+    }
+
     let key = event.target.dataset.key
     if (!key) {
         if ("enter" in event.target.dataset) {
-            console.log("Enter")
+            enterWord(currentRow)
         } else if ("delete" in event.target.dataset) {
-            console.log("Delete")
+            removeLetter(currentRow)
         }
     } else {
-        addLetter(key)
+        addLetter(key, currentRow)
+    }
+}
+
+function checkWord(word) {
+
+}
+
+function enterWord(row) {
+    if (!row) return
+
+    let word
+
+    //Check Word against dict
+
+    row.dataset.entered = ""
+
+}
+
+function removeLetter(row) {
+    if (!row) return
+
+    let tile = undefined
+
+    for (child of row.children) {
+        if (!($(child).text() === " " || $(child).text() === "")) {
+            tile = child
+        }
+    }
+
+    if (tile) {
+        $(tile).text(" ")
+    } else {
+        //Display error - no letters to delete
+        console.log("Nothing to delete")
     }
 }
 
 function addLetter(letter, row) {
-    if (!currentRow) return
-    console.log("test")
+    if (!row) return
+
+    let tile = undefined
+
+    for (child of row.children) {
+        if ($(child).text() === " " || $(child).text() === "") {
+            tile = child
+            break
+        }
+    }
+
+    if (tile) {
+        $(tile).text(letter)
+    } else {
+        //Display Error
+        console.log("Out of space")
+    }
+
 }
 
 function rowPressed(event) {
     if (currentRow) {
         currentRow.classList.remove("row-selected")
     }
-    if (!(currentRow == event.target)) {
-        currentRow = event.target
-        event.target.classList.add("row-selected")
-    }
+    // if (!(currentRow == event.target)) {
+    //     currentRow = event.target
+    //     event.target.classList.add("row-selected")
+    // }
+    currentRow = event.target
+    event.target.classList.add("row-selected")
 }
 
 function rowHoverIn(event) {
