@@ -1,5 +1,6 @@
 
 var currentRow
+var hoveredRow
 
 function createDOM(text) {
     let t = document.createElement("template")
@@ -29,22 +30,50 @@ function createGrid(word, width, height) {
 }
 
 function keyPressed(event) {
+    if (!currentRow) return
     let key = event.target.dataset.key
+    if (!key) {
+        if ("enter" in event.target.dataset) {
+            console.log("Enter")
+        } else if ("delete" in event.target.dataset) {
+            console.log("Delete")
+        }
+    } else {
+        addLetter(key)
+    }
+}
+
+function addLetter(letter, row) {
+    if (!currentRow) return
 }
 
 function rowPressed(event) {
-    console.log(event.target)
     if (currentRow) {
-        currentRow.classList.remove("row-clicked")
+        currentRow.classList.remove("row-selected")
     }
-    currentRow = event.target
-    currentRow.classList.add("row-clicked")
+    if (!(currentRow == event.target)) {
+        currentRow = event.target
+        event.target.classList.add("row-selected")
+    }
+}
+
+function rowHoverIn(event) {
+    hoveredRow = event.target
+    hoveredRow.classList.add("row-hovered")
+
+}
+
+function rowHoverOut(event) {
+    hoveredRow = event.target
+    hoveredRow.classList.remove("row-hovered")
 }
 
 
 $(function() {
-    createGrid(5, 7, 7)
+    createGrid(5, 2, 6)
     $(".key").on("click", keyPressed)
-    $(".grid-rows").on("click", rowPressed)
+    $(".row").on("mouseover", rowHoverIn)
+    $(".row").on("mouseleave", rowHoverOut)
+    $(".row").on("click", rowPressed)
 })
 

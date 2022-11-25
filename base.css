@@ -85,17 +85,30 @@
     border-color: rgba(red, green, blue, 0);
   }
 
-  .row:hover {
+  .row-hovered {
+
+    border-color: rgba(255, 255, 255, 0.5);
+
+  }
+
+  .row-selected {
+
+    border-color: rgba(255, 255, 255, 1);
+
+  }
+
+  /* .row:hover {
     border-color: rgba(255, 255, 255, 0.5);
   }
 
-  .row-clicked {
+  .row:active {
     border-color: rgba(255, 255, 255, 1);
-  }
 
-  .row-clicked:hover {
-    
-  }
+  } */
+
+  /* .row-clicked {
+    border-color: rgba(255, 255, 255, 1);
+  } */
 
   .tile {
     font-size: 1.5em;
@@ -229,4 +242,10 @@
   
   .alert.hide {
     opacity: 0;
+  }
+
+  .nav-button {
+    height: 5em;
+    width: 5em;
+    background-color: aqua;
   }
