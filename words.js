@@ -2315,7 +2315,7 @@ const targetWords = [
     "white",
     "begun",
   ]
-  const dictionary = [
+const dictionary = [
     "dilfs",
     "aahed",
     "aalii",

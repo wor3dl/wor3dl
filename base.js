@@ -1,4 +1,8 @@
 
+// May want to change this from constant
+const WORD_LENGTH = 5
+const FLIP_ANIMATION_DURATION = 300
+
 var currentRow
 var hoveredRow
 
@@ -45,7 +49,7 @@ function keyPressed(event) {
     let key = event.target.dataset.key
     if (!key) {
         if ("enter" in event.target.dataset) {
-            enterWord(currentRow)
+            enterRow(currentRow)
         } else if ("delete" in event.target.dataset) {
             removeLetter(currentRow)
         }
@@ -54,20 +58,50 @@ function keyPressed(event) {
     }
 }
 
-function checkWord(word) {
-
-}
-
-function enterWord(row) {
+function enterRow(row) {
     if (!row) return
 
-    let word
+    let word = ""
 
-    //Check Word against dict
+    for (tile of row.children) {
+        word += $(tile).text()
+    }
+
+    if (word.length < WORD_LENGTH) {
+        //Display Error
+        console.log("Not Enough Letters!!")
+        return
+    }
+
+    if (!dictionary.includes(word.toLowerCase())) {
+        //Display Error
+        console.log("Not In Dictionary")
+        return
+    }
 
     row.dataset.entered = ""
 
+    //Colouring Shit
+
+    for (let t = 0; t < row.children.length; t++) {
+        flipTile(row.children[t], t)
+    }
+
 }
+
+function flipTile(tile, index, state="correct") {
+    tile.dataset.state = "flipping"
+    setTimeout(() => {
+      tile.classList.add("flip")
+    }, (index * FLIP_ANIMATION_DURATION) / 2)
+  
+    tile.addEventListener("transitionend", ()=>{
+      tile.classList.remove("flip")
+      tile.style.color = "white"
+      tile.dataset.state = state
+      }
+    )
+  }
 
 function removeLetter(row) {
     if (!row) return
@@ -132,12 +166,42 @@ function rowHoverOut(event) {
     hoveredRow.classList.remove("row-hovered")
 }
 
+function physicalKeyPressed(event) {
+
+    if (!currentRow) {
+        //Display Error
+        console.log("Select A Row!!!")
+        return
+    } else if ("entered" in currentRow.dataset) {
+        //Display Error
+        console.log("Already entered word")
+        return
+    }
+
+    if (event.key === "Enter") {
+        enterRow(currentRow)
+        return
+      }
+    
+      if (event.key === "Backspace" || event.key === "Delete") {
+        removeLetter(currentRow)
+        return
+      }
+
+
+    if (event.key.match(/^[a-z]$/) || event.key.match(/^[A-Z]$/)) {
+        addLetter(event.key.toUpperCase(), currentRow)
+        return
+      }
+}
+
 
 $(function() {
-    createGrid(5, 2, 6)
+    createGrid(WORD_LENGTH, 2, 6)
     $(".key").on("click", keyPressed)
     $(".row").on("mouseover", rowHoverIn)
     $(".row").on("mouseleave", rowHoverOut)
     $(".row").on("click", rowPressed)
+    $(document).on("keydown", physicalKeyPressed)
 })
 
