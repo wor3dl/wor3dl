@@ -147,12 +147,12 @@ function rowPressed(event) {
     if (currentRow) {
         currentRow.classList.remove("row-selected")
     }
-    // if (!(currentRow == event.target)) {
-    //     currentRow = event.target
-    //     event.target.classList.add("row-selected")
-    // }
-    currentRow = event.target
-    event.target.classList.add("row-selected")
+    if (!(currentRow == event.target)) {
+        currentRow = event.target
+        event.target.classList.add("row-selected")
+    } else {
+        currentRow = null
+    }
 }
 
 function rowHoverIn(event) {
