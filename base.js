@@ -62,15 +62,23 @@ function createDOM(text) {
 }
 
 function createGrid(word, width, height) {
+    let classes = ""
     for (let x = 0; x < width; x++) {
         let rows = createDOM(rowsHTML)
-        for (let y = 0; y < height; y++) {
+        for (let y = 0; y < height+1; y++) {
+            if (y == height+1){
+                classes = " cans"
+            }
             let row = createDOM(rowHTML)
+            classes = ""
             for (let t = 0; t < word; t++) {
                 let tile = createDOM(tileHTML)
                 row.appendChild(tile)
             }
             row.id = x + "row" + y
+            if (y == height) {
+                $(row).addClass("cans")
+            }
             rows.appendChild(row)
         }
         let grid = createDOM(gridHTML)
@@ -254,6 +262,9 @@ function addLetter(letter, row) {
 }
 
 function rowPressed(event) {
+    if ($(event.target).hasClass("cans")){
+        return
+    }
     if (currentRow) {
         currentRow.classList.remove("row-selected")
     }

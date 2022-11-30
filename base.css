@@ -85,6 +85,10 @@
     border-color: rgba(red, green, blue, 0);
   }
 
+  .cans {
+    margin-top: 1.2em;
+  }
+
   .row-hovered {
 
     border-color: rgba(255, 255, 255, 0.5);
