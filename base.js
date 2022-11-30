@@ -82,10 +82,57 @@ function enterRow(row) {
     row.dataset.entered = ""
 
     //Colouring Shit
+    console.log(symbolColourWord(word.toLowerCase(), ["hello"]))
 
     for (let t = 0; t < row.children.length; t++) {
         flipTile(row.children[t], t)
     }
+
+}
+
+function setCharAt(str,index,chr) {
+    if(index > str.length-1) return str;
+    return str.substring(0,index) + chr + str.substring(index+1);
+  }
+
+const correctSymbol = "@"
+const misplacedSymbol = "/"
+const incorrectSymbol = "-"
+
+//all words should be lowercase
+function symbolColourWord(word, interferes=[]) {
+
+    let cWord = word
+
+    for (let interfereWord of interferes) {
+
+        let misplacedBuffer = interfereWord
+
+        for (let char = 0; char < word.length; char++) {
+
+            if (cWord[char] === correctSymbol) continue
+
+            if (word[char] === interfereWord[char]) {
+                cWord = setCharAt(cWord, char, correctSymbol)
+            } else if (misplacedBuffer.includes(word[char])) {
+                cWord = setCharAt(cWord, char, misplacedSymbol)
+                misplacedBuffer = setCharAt(misplacedBuffer, char, " ")
+            }
+
+        }
+
+    }
+
+    console.log(cWord)
+
+    //Replace remaining letters with incorrectSymbol
+    for (let char = 0; char < cWord.length; char++) {
+        if (!(cWord[char] === correctSymbol || cWord[char] === misplacedSymbol)) {
+            cWord = setCharAt(cWord, char, incorrectSymbol)
+        }
+    }
+
+    return cWord
 
 }
 
