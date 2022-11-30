@@ -3,8 +3,57 @@
 const WORD_LENGTH = 5
 const FLIP_ANIMATION_DURATION = 300
 
+const offsetFromDate = new Date(2022, 0, 1)
+const msOffset = Date.now() - offsetFromDate
+const dayOffset = Math.floor(msOffset / 1000 / 60 / 60 / 24)
+
+var interfereWords = {"rows":[], "grids":[]}
+
 var currentRow
 var hoveredRow
+
+
+const hash = function(str, seed = 0) {
+    let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+    for (let i = 0, ch; i < str.length; i++) {
+        ch = str.charCodeAt(i);
+        h1 = Math.imul(h1 ^ ch, 2654435761);
+        h2 = Math.imul(h2 ^ ch, 1597334677);
+    }
+    h1 = Math.imul(h1 ^ (h1>>>16), 2246822507) ^ Math.imul(h2 ^ (h2>>>13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2>>>16), 2246822507) ^ Math.imul(h1 ^ (h1>>>13), 3266489909);
+    return 4294967296 * (2097151 & h2) + (h1>>>0);
+  };
+  
+  function mulberry32(a) {
+    return function() {
+      var t = a += 0x6D2B79F5;
+      t = Math.imul(t ^ t >>> 15, t | 1);
+      t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    }
+  }
+
+function generateInterfereWords(seed, rows, grids) {
+
+    var interfereWords = {"rows":[], "grids":[]}
+    let tempTargets = targetWords
+
+    for (let x = 0; x < rows; x++) {
+        let index = Math.floor(mulberry32(parseInt(String(seed)+"1111"+String(x)))()*(2315-x))
+        interfereWords.rows.push(tempTargets[index])
+        tempTargets.splice(index, 1)
+    }
+
+    for (let y = 0; y < rows; y++) {
+        let index = Math.floor(mulberry32(parseInt(String(seed)+"1111"+String(y+rows)))()*(2315-(y+rows)))
+        interfereWords.grids.push(tempTargets[index])
+        tempTargets.splice(index, 1)
+    } 
+
+    return interfereWords
+
+}
 
 function createDOM(text) {
     let t = document.createElement("template")
@@ -82,7 +131,7 @@ function enterRow(row) {
     row.dataset.entered = ""
 
     //Colouring Shit
-    let colouredWord = symbolColourWord(word.toLowerCase(), ["hello"])
+    let colouredWord = symbolColourWord(word.toLowerCase(), [interfereWords.rows[row.id[4]], interfereWords.grids[row.id[0]]])
 
     for (let t = 0; t < row.children.length; t++) {
 
@@ -258,7 +307,8 @@ function physicalKeyPressed(event) {
 
 
 $(function() {
-    createGrid(WORD_LENGTH, 2, 6)
+    interfereWords = generateInterfereWords(dayOffset, 6, 6)
+    createGrid(WORD_LENGTH, 6, 6)
     $(".key").on("click", keyPressed)
     $(".row").on("mouseover", rowHoverIn)
     $(".row").on("mouseleave", rowHoverOut)
