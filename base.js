@@ -82,10 +82,25 @@ function enterRow(row) {
     row.dataset.entered = ""
 
     //Colouring Shit
-    console.log(symbolColourWord(word.toLowerCase(), ["hello"]))
+    let colouredWord = symbolColourWord(word.toLowerCase(), ["hello"])
 
     for (let t = 0; t < row.children.length; t++) {
-        flipTile(row.children[t], t)
+
+        let colour
+
+        switch(colouredWord[t]) {
+            case "@":
+                colour = "correct";
+            break;
+            case "/":
+                colour = "wrong-location";
+            break;
+            default:
+                colour = "wrong";
+        }
+
+        flipTile(row.children[t], t, colour)
+    
     }
 
 }
@@ -114,16 +129,15 @@ function symbolColourWord(word, interferes=[]) {
 
             if (word[char] === interfereWord[char]) {
                 cWord = setCharAt(cWord, char, correctSymbol)
+                misplacedBuffer = setCharAt(misplacedBuffer, misplacedBuffer.indexOf(word[char]), "~")
             } else if (misplacedBuffer.includes(word[char])) {
                 cWord = setCharAt(cWord, char, misplacedSymbol)
-                misplacedBuffer = setCharAt(misplacedBuffer, char, " ")
+                misplacedBuffer = setCharAt(misplacedBuffer, misplacedBuffer.indexOf(word[char]), "~")
             }
 
         }
 
     }
-
-    console.log(cWord)
 
     //Replace remaining letters with incorrectSymbol
     for (let char = 0; char < cWord.length; char++) {
