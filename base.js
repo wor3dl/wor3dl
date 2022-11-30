@@ -62,31 +62,36 @@ function createDOM(text) {
 }
 
 function createGrid(word, width, height) {
-    let classes = ""
-    for (let x = 0; x < width; x++) {
+    for (let x = 0; x < width+1; x++) {
         let rows = createDOM(rowsHTML)
         for (let y = 0; y < height+1; y++) {
             if (y == height+1){
-                classes = " cans"
             }
             let row = createDOM(rowHTML)
-            classes = ""
             for (let t = 0; t < word; t++) {
                 let tile = createDOM(tileHTML)
                 row.appendChild(tile)
             }
             row.id = x + "row" + y
             if (y == height) {
+                if (x == width) {
+                    rows.id = "ans"
+                    break
+                }
                 $(row).addClass("cans")
             }
             rows.appendChild(row)
         }
         let grid = createDOM(gridHTML)
         let title = createDOM(gridTitleHTML)
-        title.textContent = String(x+1)
+        title.textContent = String(((x == width) ? "A" : x+1))
         grid.appendChild(title)
         grid.appendChild(rows)
         $("#grid-container").append(grid)
+    }
+    for (let val = 0; val < height; val++) {
+        $(("#"+width+"row"+val)).addClass("rans")
+        console.log(("#"+width+"row"+val))
     }
 }
 
@@ -134,6 +139,26 @@ function enterRow(row) {
         //Display Error
         console.log("Not In Dictionary")
         return
+    }
+
+    if (interfereWords["grids"].includes(word.toLowerCase())) {
+        console.log($(row).attr("id")[0])
+        console.log(interfereWords["grids"][interfereWords["grids"].indexOf(word.toLowerCase())])
+        if ($(row).attr("id")[0] == interfereWords["grids"].indexOf(word.toLowerCase())) {
+            for (let val = 0; val < word.length; val++) {
+                addLetter(word[val], $("#"+$(row).attr("id")[0]+("row"+(interfereWords["grids"].length))).get(0))
+            }
+        }
+    }
+
+    if (interfereWords["rows"].includes(word.toLowerCase())) {
+        console.log($(row).attr("id")[$(row).attr("id").length-1])
+        console.log(interfereWords["rows"][interfereWords["rows"].indexOf(word.toLowerCase())])
+        if ($(row).attr("id")[$(row).attr("id").length-1] == interfereWords["rows"].indexOf(word.toLowerCase())) {
+            for (let val = 0; val < word.length; val++) {
+                addLetter(word[val], $("#"+(interfereWords["grids"].length)+"row"+$(row).attr("id")[$(row).attr("id").length-1]).get(0))
+            }
+        }
     }
 
     row.dataset.entered = ""
@@ -262,7 +287,7 @@ function addLetter(letter, row) {
 }
 
 function rowPressed(event) {
-    if ($(event.target).hasClass("cans")){
+    if ($(event.target).hasClass("cans") || $(event.target).hasClass("rans")){
         return
     }
     if (currentRow) {

@@ -28,9 +28,14 @@
     display: flex;
     flex-direction: row;
     align-content: center;
-    justify-content: center;
+    justify-content: left;
     gap: .75em;
     margin-bottom: 1em;
+    margin-left: 5em;
+    margin-right: 5em;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+    overflow-x: scroll;
     /* display: inline-flex;
     justify-content: center;
     align-content: center;
