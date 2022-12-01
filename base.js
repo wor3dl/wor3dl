@@ -137,15 +137,36 @@ function enterRow(row) {
         return
     }
 
-    for (let interfereKey of Object.keys(interfereWords)) {
+    // for (let interfereKey of Object.keys(interfereWords)) {
 
-        let interferes = interfereWords[interfereKey]
-        console.log(interferes)
+    //     let interferes = interfereWords[interfereKey]
+    //     console.log(interferes)
+    //     if (interferes.includes(word.toLowerCase())) {
+    //         for (let letter of word) {
+    //             addLetter(letter, $("#"+row.id.split("r")[0]+"r"+interferes.length).get(0))
+    //         }
+    //     }
+
+    // }
+
+    if (interfereWords.grids.includes(word.toLowerCase())) {
+
+        let interferes = interfereWords.grids
         if (interferes.includes(word.toLowerCase())) {
             for (let letter of word) {
                 addLetter(letter, $("#"+row.id.split("r")[0]+"r"+interferes.length).get(0))
             }
-        }
+        }            
+
+    }
+
+    if (interfereWords.rows.includes(word.toLowerCase())) {
+        let interferes = interfereWords.rows
+        if (interferes.includes(word.toLowerCase())) {
+            for (let letter of word) {
+                addLetter(letter, $("#"+interferes.length+"r"+row.id.split("r")[1]).get(0))
+            }
+        }            
 
     }
 
