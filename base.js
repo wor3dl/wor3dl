@@ -153,9 +153,17 @@ function enterRow(row) {
 
         let interferes = interfereWords.grids
         if (interferes.includes(word.toLowerCase())) {
+
+            let answerRow = $("#"+row.id.split("r")[0]+"r"+interferes.length).get(0)
+
             for (let letter of word) {
-                addLetter(letter, $("#"+row.id.split("r")[0]+"r"+interferes.length).get(0))
+                addLetter(letter, answerRow)
             }
+
+            for (let t = 0; t < answerRow.children.length; t++) {
+                flipTile(answerRow.children[t], t, "correct")
+            }
+
         }            
 
     }
@@ -163,9 +171,17 @@ function enterRow(row) {
     if (interfereWords.rows.includes(word.toLowerCase())) {
         let interferes = interfereWords.rows
         if (interferes.includes(word.toLowerCase())) {
+
+            let answerRow = $("#"+interferes.length+"r"+row.id.split("r")[1]).get(0)
+
             for (let letter of word) {
-                addLetter(letter, $("#"+interferes.length+"r"+row.id.split("r")[1]).get(0))
+                addLetter(letter, answerRow)
             }
+
+            for (let t = 0; t < answerRow.children.length; t++) {
+                flipTile(answerRow.children[t], t, "correct")
+            }
+
         }            
 
     }
