@@ -123,11 +123,7 @@ function keyPressed(event) {
 function enterRow(row) {
     if (!row) return
 
-    let word = ""
-
-    for (tile of row.children) {
-        word += $(tile).text()
-    }
+    let word = getRowWord(row)
 
     if (word.length < WORD_LENGTH) {
         //Display Error
@@ -141,25 +137,37 @@ function enterRow(row) {
         return
     }
 
-    if (interfereWords["grids"].includes(word.toLowerCase())) {
-        console.log($(row).attr("id").split("r")[0])
-        console.log(interfereWords["grids"][interfereWords["grids"].indexOf(word.toLowerCase())])
-        if ($(row).attr("id").split("r")[0] == interfereWords["grids"].indexOf(word.toLowerCase())) {
-            for (let val = 0; val < word.length; val++) {
-                addLetter(word[val], $("#"+$(row).attr("id").split("r")[0]+("r"+(interfereWords["grids"].length))).get(0))
+    for (let interfereKey of Object.keys(interfereWords)) {
+
+        let interferes = interfereWords[interfereKey]
+        console.log(interferes)
+        if (interferes.includes(word.toLowerCase())) {
+            for (let letter of word) {
+                addLetter(letter, $("#"+row.id.split("r")[0]+"r"+interferes.length).get(0))
             }
         }
+
     }
 
-    if (interfereWords["rows"].includes(word.toLowerCase())) {
-        console.log($(row).attr("id").split("r")[1])
-        console.log(interfereWords["rows"][interfereWords["rows"].indexOf(word.toLowerCase())])
-        if ($(row).attr("id").split("r")[1] == interfereWords["rows"].indexOf(word.toLowerCase())) {
-            for (let val = 0; val < word.length; val++) {
-                addLetter(word[val], $("#"+(interfereWords["grids"].length)+"r"+$(row).attr("id").split("r")[1]).get(0))
-            }
-        }
-    }
+    // if (interfereWords["grids"].includes(word.toLowerCase())) {
+    //     console.log($(row).attr("id").split("r")[0])
+    //     console.log(interfereWords["grids"][interfereWords["grids"].indexOf(word.toLowerCase())])
+    //     if ($(row).attr("id").split("r")[0] == interfereWords["grids"].indexOf(word.toLowerCase())) {
+    //         for (let val = 0; val < word.length; val++) {
+    //             addLetter(word[val], $("#"+$(row).attr("id").split("r")[0]+("r"+(interfereWords["grids"].length))).get(0))
+    //         }
+    //     }
+    // }
+
+    // if (interfereWords["rows"].includes(word.toLowerCase())) {
+    //     console.log($(row).attr("id").split("r")[1])
+    //     console.log(interfereWords["rows"][interfereWords["rows"].indexOf(word.toLowerCase())])
+    //     if ($(row).attr("id").split("r")[1] == interfereWords["rows"].indexOf(word.toLowerCase())) {
+    //         for (let val = 0; val < word.length; val++) {
+    //             addLetter(word[val], $("#"+(interfereWords["grids"].length)+"r"+$(row).attr("id").split("r")[1]).get(0))
+    //         }
+    //     }
+    // }
 
     row.dataset.entered = ""
 
@@ -184,6 +192,21 @@ function enterRow(row) {
         flipTile(row.children[t], t, colour)
     
     }
+
+}
+
+
+function getRowWord(row) {
+
+    if (!row) return null
+
+    let word = ""
+
+    for (tile of row.children) {
+        word += $(tile).text()
+    }
+
+    return word
 
 }
 
