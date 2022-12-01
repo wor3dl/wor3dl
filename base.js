@@ -72,7 +72,7 @@ function createGrid(word, width, height) {
                 let tile = createDOM(tileHTML)
                 row.appendChild(tile)
             }
-            row.id = x + "row" + y
+            row.id = x + "r" + y
             if (y == height) {
                 if (x == width) {
                     rows.id = "ans"
@@ -90,8 +90,8 @@ function createGrid(word, width, height) {
         $("#grid-container").append(grid)
     }
     for (let val = 0; val < height; val++) {
-        $(("#"+width+"row"+val)).addClass("rans")
-        console.log(("#"+width+"row"+val))
+        $(("#"+width+"r"+val)).addClass("rans")
+        console.log(("#"+width+"r"+val))
     }
 }
 
@@ -142,21 +142,21 @@ function enterRow(row) {
     }
 
     if (interfereWords["grids"].includes(word.toLowerCase())) {
-        console.log($(row).attr("id")[0])
+        console.log($(row).attr("id").split("r")[0])
         console.log(interfereWords["grids"][interfereWords["grids"].indexOf(word.toLowerCase())])
-        if ($(row).attr("id")[0] == interfereWords["grids"].indexOf(word.toLowerCase())) {
+        if ($(row).attr("id").split("r")[0] == interfereWords["grids"].indexOf(word.toLowerCase())) {
             for (let val = 0; val < word.length; val++) {
-                addLetter(word[val], $("#"+$(row).attr("id")[0]+("row"+(interfereWords["grids"].length))).get(0))
+                addLetter(word[val], $("#"+$(row).attr("id").split("r")[0]+("r"+(interfereWords["grids"].length))).get(0))
             }
         }
     }
 
     if (interfereWords["rows"].includes(word.toLowerCase())) {
-        console.log($(row).attr("id")[$(row).attr("id").length-1])
+        console.log($(row).attr("id").split("r")[1])
         console.log(interfereWords["rows"][interfereWords["rows"].indexOf(word.toLowerCase())])
-        if ($(row).attr("id")[$(row).attr("id").length-1] == interfereWords["rows"].indexOf(word.toLowerCase())) {
+        if ($(row).attr("id").split("r")[1] == interfereWords["rows"].indexOf(word.toLowerCase())) {
             for (let val = 0; val < word.length; val++) {
-                addLetter(word[val], $("#"+(interfereWords["grids"].length)+"row"+$(row).attr("id")[$(row).attr("id").length-1]).get(0))
+                addLetter(word[val], $("#"+(interfereWords["grids"].length)+"r"+$(row).attr("id").split("r")[1]).get(0))
             }
         }
     }
@@ -164,7 +164,7 @@ function enterRow(row) {
     row.dataset.entered = ""
 
     //Colouring Shit
-    let colouredWord = symbolColourWord(word.toLowerCase(), [interfereWords.rows[row.id[4]], interfereWords.grids[row.id[0]]])
+    let colouredWord = symbolColourWord(word.toLowerCase(), [interfereWords.rows[row.id.split("r")[1]], interfereWords.grids[row.id.split("r")[0]]])
 
     for (let t = 0; t < row.children.length; t++) {
 
