@@ -152,73 +152,91 @@ function enterRow(row) {
 
     // }
 
-    if (interfereWords.grids.includes(word.toLowerCase())) {
+    // if (interfereWords.grids.includes(word.toLowerCase())) {
 
-        let interferes = interfereWords.grids
-        if (interferes.includes(word.toLowerCase())) {
+    //     let interferes = interfereWords.grids
+    //     if (interferes.includes(word.toLowerCase())) {
 
-            let answerRow = $("#"+row.id.split("r")[0]+"r"+interferes.length).get(0)
+    //         let answerRow = $("#"+row.id.split("r")[0]+"r"+interferes.length).get(0)
 
-            for (let letter of word) {
-                addLetter(letter, answerRow)
-            }
+    //         for (let letter of word) {
+    //             addLetter(letter, answerRow)
+    //         }
 
-            for (let t = 0; t < answerRow.children.length; t++) {
-                flipTile(answerRow.children[t], t, "correct")
-            }
+    //         for (let t = 0; t < answerRow.children.length; t++) {
+    //             flipTile(answerRow.children[t], t, "correct")
+    //         }
         
-        answerRow.children[answerRow.children.length-1].addEventListener("transitionend", () => {
-            danceTiles(Array.from(row.children))
-        })
+    //     answerRow.children[answerRow.children.length-1].addEventListener("transitionend", () => {
+    //         danceTiles(Array.from(row.children))
+    //     })
 
 
-        }            
+    //     }            
 
-    }
+    // }
 
-    if (interfereWords.rows.includes(word.toLowerCase())) {
-        let interferes = interfereWords.rows
-        if (interferes.includes(word.toLowerCase())) {
+    // if (interfereWords.rows.includes(word.toLowerCase())) {
+    //     let interferes = interfereWords.rows
+    //     if (interferes.includes(word.toLowerCase())) {
 
-            let answerRow = $("#"+interferes.length+"r"+row.id.split("r")[1]).get(0)
+    //         let answerRow = $("#"+interferes.length+"r"+row.id.split("r")[1]).get(0)
 
-            for (let letter of word) {
-                addLetter(letter, answerRow)
-            }
+    //         for (let letter of word) {
+    //             addLetter(letter, answerRow)
+    //         }
 
-            for (let t = 0; t < answerRow.children.length; t++) {
-                flipTile(answerRow.children[t], t, "correct")
-            }
+    //         for (let t = 0; t < answerRow.children.length; t++) {
+    //             flipTile(answerRow.children[t], t, "correct")
+    //         }
 
-            answerRow.children[answerRow.children.length-1].addEventListener("transitionend", () => {
+    //         answerRow.children[answerRow.children.length-1].addEventListener("transitionend", () => {
+    //             danceTiles(Array.from(row.children))
+    //         })
+
+
+
+    //     }            
+
+    // }
+
+    if (interfereWords["grids"].includes(word.toLowerCase())) {
+        let answerRow = $("#"+$(row).attr("id").split("r")[0]+("r"+(interfereWords["grids"].length))).get(0)
+        console.log($(row).attr("id").split("r")[0])
+        console.log(interfereWords["grids"][interfereWords["grids"].indexOf(word.toLowerCase())])
+        if ($(row).attr("id").split("r")[0] == interfereWords["grids"].indexOf(word.toLowerCase())) {
+            if (answerRow.children[0].innerHTML == " ") {
+                for (let val = 0; val < word.length; val++) {
+                    addLetter(word[val], answerRow)
+                for (let t = 0; t < answerRow.children.length; t++) {
+                    flipTile(answerRow.children[t], t, "correct")
+                }
+                answerRow.children[answerRow.children.length-1].addEventListener("transitionend", () => {
                 danceTiles(Array.from(row.children))
-            })
-
-
-
-        }            
-
+                })
+                }
+            }
+        }
     }
 
-    // if (interfereWords["grids"].includes(word.toLowerCase())) {
-    //     console.log($(row).attr("id").split("r")[0])
-    //     console.log(interfereWords["grids"][interfereWords["grids"].indexOf(word.toLowerCase())])
-    //     if ($(row).attr("id").split("r")[0] == interfereWords["grids"].indexOf(word.toLowerCase())) {
-    //         for (let val = 0; val < word.length; val++) {
-    //             addLetter(word[val], $("#"+$(row).attr("id").split("r")[0]+("r"+(interfereWords["grids"].length))).get(0))
-    //         }
-    //     }
-    // }
-
-    // if (interfereWords["rows"].includes(word.toLowerCase())) {
-    //     console.log($(row).attr("id").split("r")[1])
-    //     console.log(interfereWords["rows"][interfereWords["rows"].indexOf(word.toLowerCase())])
-    //     if ($(row).attr("id").split("r")[1] == interfereWords["rows"].indexOf(word.toLowerCase())) {
-    //         for (let val = 0; val < word.length; val++) {
-    //             addLetter(word[val], $("#"+(interfereWords["grids"].length)+"r"+$(row).attr("id").split("r")[1]).get(0))
-    //         }
-    //     }
-    // }
+    if (interfereWords["rows"].includes(word.toLowerCase())) {
+        let answerRow = $("#"+(interfereWords["grids"].length)+"r"+$(row).attr("id").split("r")[1]).get(0)
+        console.log($(row).attr("id").split("r")[1])
+        console.log(interfereWords["rows"][interfereWords["rows"].indexOf(word.toLowerCase())])
+        if ($(row).attr("id").split("r")[1] == interfereWords["rows"].indexOf(word.toLowerCase())) {
+            if (answerRow.children[0].innerHTML == " ") {
+                for (let val = 0; val < word.length; val++) {
+                    addLetter(word[val], answerRow)
+                for (let t = 0; t < answerRow.children.length; t++) {
+                    flipTile(answerRow.children[t], t, "correct")
+                }
+                answerRow.children[answerRow.children.length-1].addEventListener("transitionend", () => {
+                    danceTiles(Array.from(row.children))
+                })
+                }
+            }
+        }
+    }
 
     row.dataset.entered = ""
 
