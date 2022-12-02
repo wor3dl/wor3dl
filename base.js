@@ -64,6 +64,7 @@ function createDOM(text) {
 function createGrid(word, width, height) {
     for (let x = 0; x < width+1; x++) {
         let rows = createDOM(rowsHTML)
+        rows.dataset["gridRows"] = x
         for (let y = 0; y < height+1; y++) {
             if (y == height+1){
             }
@@ -83,6 +84,7 @@ function createGrid(word, width, height) {
             rows.appendChild(row)
         }
         let grid = createDOM(gridHTML)
+        grid.dataset["guessGrid"] = x
         let title = createDOM(gridTitleHTML)
         title.textContent = String(((x == width) ? "A" : x+1))
         grid.appendChild(title)
@@ -403,12 +405,13 @@ function physicalKeyPressed(event) {
 
 
 $(function() {
-    interfereWords = generateInterfereWords(dayOffset, 6, 6)
-    createGrid(WORD_LENGTH, 6, 6)
+    interfereWords = generateInterfereWords(dayOffset, 2, 2)
+    createGrid(WORD_LENGTH, 2, 2)
     $(".key").on("click", keyPressed)
-    $(".row").on("mouseover", rowHoverIn)
-    $(".row").on("mouseleave", rowHoverOut)
-    $(".row").on("click", rowPressed)
+    let selectableRows = $(".row").not(".cans").not(".rans")
+    selectableRows.on("mouseover", rowHoverIn)
+    selectableRows.on("mouseleave", rowHoverOut)
+    selectableRows.on("click", rowPressed)
     $(document).on("keydown", physicalKeyPressed)
 })
 
