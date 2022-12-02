@@ -31,8 +31,8 @@
     justify-content: left;
     gap: .75em;
     margin-bottom: 1em;
-    margin-left: 5em;
-    margin-right: 5em;
+    margin-left: 2em;
+    margin-right: 2em;
     padding-left: 0.2em;
     padding-right: 0.2em;
     overflow-x: scroll;
@@ -45,6 +45,27 @@
     gap: .25em;
     margin-bottom: 1em; */
   }
+
+  /* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
 
   .guess-grid {
     display: flex;
@@ -60,6 +81,10 @@
     gap: .25em;
     margin-bottom: 1em; */
   }
+  
+  .grid-hidden {
+    display: none;
+  }
 
   .grid-title {
     display: flex;
@@ -73,6 +98,38 @@
     background-color: white;
     border-radius: 0.3em;
     margin-bottom: 0.2em;
+  }
+
+  #grid-navigation {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-content: center;
+    gap: .75em;
+    margin-bottom: 1em;
+    margin-left: 5em;
+    margin-right: 5em;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+  }
+
+  .nav-button {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    font-size: 1.5em;
+    font-weight: bold;
+    width: 2em;
+    height: 1.2em;
+    background-color: white;
+    border-radius: 0.3em;
+    margin-bottom: 0.2em;
+  }
+
+  .nav-button-hidden {
+    background-color: rgb(155, 155, 155);
   }
 
   .grid-rows {
@@ -224,7 +281,7 @@
     }
   }
   
-  .alert-container {
+  #alert-container {
     position: fixed;
     top: 10vh;
     left: 50vw;
@@ -253,8 +310,3 @@
     opacity: 0;
   }
 
-  .nav-button {
-    height: 5em;
-    width: 5em;
-    background-color: aqua;
-  }

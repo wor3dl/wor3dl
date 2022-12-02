@@ -2,6 +2,7 @@
 // May want to change this from constant
 const WORD_LENGTH = 5
 const FLIP_ANIMATION_DURATION = 300
+const DANCE_ANIMATION_DURATION = 500
 
 const offsetFromDate = new Date(2022, 0, 1)
 const msOffset = Date.now() - offsetFromDate
@@ -87,6 +88,10 @@ function createGrid(word, width, height) {
         grid.dataset["guessGrid"] = x
         let title = createDOM(gridTitleHTML)
         title.textContent = String(((x == width) ? "A" : x+1))
+        let nav = createDOM(navButtonHTML)
+        nav.textContent = String(((x == width) ? "A" : x+1))
+        nav.dataset.grid = x
+        $("#grid-navigation").append(nav)
         grid.appendChild(title)
         grid.appendChild(rows)
         $("#grid-container").append(grid)
@@ -99,14 +104,12 @@ function createGrid(word, width, height) {
 
 function keyPressed(event) {
     if (!currentRow) { 
-        //Display Error
-        console.log("Select a Row!!!")
+        showAlert("Select a Row")
         return
     }
 
     if ("entered" in currentRow.dataset) {
-        //Display Error
-        console.log("Already Entered Word")
+        //Already entered row
         return
     }
 
@@ -128,14 +131,12 @@ function enterRow(row) {
     let word = getRowWord(row)
 
     if (word.length < WORD_LENGTH) {
-        //Display Error
-        console.log("Not Enough Letters!!")
+        showAlert("Not enough letters")
         return
     }
 
     if (!dictionary.includes(word.toLowerCase())) {
-        //Display Error
-        console.log("Not In Dictionary")
+        showAlert("Not in word list")
         return
     }
 
@@ -165,6 +166,11 @@ function enterRow(row) {
             for (let t = 0; t < answerRow.children.length; t++) {
                 flipTile(answerRow.children[t], t, "correct")
             }
+        
+        answerRow.children[answerRow.children.length-1].addEventListener("transitionend", () => {
+            danceTiles(Array.from(row.children))
+        })
+
 
         }            
 
@@ -183,6 +189,12 @@ function enterRow(row) {
             for (let t = 0; t < answerRow.children.length; t++) {
                 flipTile(answerRow.children[t], t, "correct")
             }
+
+            answerRow.children[answerRow.children.length-1].addEventListener("transitionend", () => {
+                danceTiles(Array.from(row.children))
+            })
+
+
 
         }            
 
@@ -244,8 +256,7 @@ function getRowWord(row) {
     for (tile of row.children) {
         word += $(tile).text()
     }
-
-    return word
+    return word.trim()
 
 }
 
@@ -306,6 +317,22 @@ function flipTile(tile, index, state="correct") {
       tile.dataset.state = state
       }
     )
+}
+
+function danceTiles(tiles) {
+    tiles.forEach((tile, index) => {
+        console.log(tile)
+      setTimeout(() => {
+        tile.classList.add("dance")
+        tile.addEventListener(
+          "animationend",
+          () => {
+            tile.classList.remove("dance")
+          },
+          { once: true }
+        )
+      }, (index * DANCE_ANIMATION_DURATION) / 5)
+    })
   }
 
 function removeLetter(row) {
@@ -323,7 +350,6 @@ function removeLetter(row) {
         $(tile).text(" ")
     } else {
         //Display error - no letters to delete
-        console.log("Nothing to delete")
     }
 }
 
@@ -377,12 +403,10 @@ function rowHoverOut(event) {
 function physicalKeyPressed(event) {
 
     if (!currentRow) {
-        //Display Error
-        console.log("Select A Row!!!")
+        showAlert("Select a row")
         return
     } else if ("entered" in currentRow.dataset) {
-        //Display Error
-        console.log("Already entered word")
+        //Already entered row
         return
     }
 
@@ -403,11 +427,34 @@ function physicalKeyPressed(event) {
       }
 }
 
+function navButtonPressed(event) {
+    let button = event.target
+    $(button).toggleClass("nav-button-hidden")
+    console.log($(`guess-grid[data-guess-grid='${button.dataset.grid}']`))
+    $(`div[data-guess-grid="${button.dataset.grid}"]`).toggleClass("grid-hidden")
+}
+
+function showAlert(message, duration = 1000) {
+    const alert = document.createElement("div")
+    alert.textContent = message
+    alert.classList.add("alert")
+    $("#alert-container").prepend(alert)
+    if (duration == null) return
+  
+    setTimeout(() => {
+      alert.classList.add("hide")
+      alert.addEventListener("transitionend", () => {
+        alert.remove()
+      })
+    }, duration)
+  }
+  
 
 $(function() {
-    interfereWords = generateInterfereWords(dayOffset, 2, 2)
-    createGrid(WORD_LENGTH, 2, 2)
+    interfereWords = generateInterfereWords(dayOffset, 6, 6)
+    createGrid(WORD_LENGTH, 6, 6)
     $(".key").on("click", keyPressed)
+    $(".nav-button").on("click", navButtonPressed)
     let selectableRows = $(".row").not(".cans").not(".rans")
     selectableRows.on("mouseover", rowHoverIn)
     selectableRows.on("mouseleave", rowHoverOut)
